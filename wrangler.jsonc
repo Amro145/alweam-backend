@@ -10,13 +10,18 @@
 			"database_id": "de797c0e-2e5b-42cf-8aeb-ef5a9798e20d",
 			"remote": true
 		}
-	]
+	],
+	"vars": {
+	  "CLOUDINARY_CLOUD_NAME": "your_cloud_name",
+	  "CLOUDINARY_API_KEY": "your_api_key",
+	  "CLOUDINARY_API_SECRET": "your_api_secret",
+	  "WHATSAPP_NUMBER": "966500000000",
+	  "FRONTEND_URL": "http://localhost:3000",
+	  "ADMIN_SECRET": "super_secret_admin_token_change_me"
+	}
 	// "compatibility_flags": [
 	//   "nodejs_compat"
 	// ],
-	// "vars": {
-	//   "MY_VAR": "my-variable"
-	// },
 	// "kv_namespaces": [
 	//   {
 	//     "binding": "MY_KV_NAMESPACE",
