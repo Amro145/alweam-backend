@@ -27,6 +27,18 @@ router.post('/', zValidator('json', portfolioSchema), async (c) => {
   return c.json({ success: true, data: newWork }, 201);
 });
 
+const updatePortfolioSchema = portfolioSchema.partial();
+router.put('/:id', zValidator('json', updatePortfolioSchema), async (c) => {
+  const id = parseInt(c.req.param('id'));
+  const data = c.req.valid('json');
+  const db = c.get('db');
+  
+  const updatedWork = await db.update(portfolio).set(data).where(eq(portfolio.id, id)).returning().get();
+  if (!updatedWork) return c.json({ error: 'Portfolio item not found' }, 404);
+  
+  return c.json({ success: true, data: updatedWork });
+});
+
 router.delete('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
   const db = c.get('db');
