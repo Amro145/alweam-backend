@@ -1,0 +1,14 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn npx drizzle-kit generate
+expect -exact "category_id column in products table created or renamed"
+send "\r"
+expect -exact "is_active column in products table created or renamed"
+send "\r"
+expect -exact "stock_quantity column in products table created or renamed"
+send "\r"
+expect -exact "sale_price column in products table created or renamed"
+send "\r"
+expect -exact "sku column in products table created or renamed"
+send "\r"
+expect eof
