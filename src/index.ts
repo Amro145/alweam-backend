@@ -9,7 +9,7 @@ import { getCorsMiddleware } from './middleware/security';
 import productRoutes from './routes/products';
 import portfolioRoutes from './routes/portfolio';
 import uploadRoutes from './routes/upload';
-import adminRoutes from './routes/admin';
+import { bearerAuth } from 'hono/bearer-auth';
 
 const app = new Hono<AppEnv>();
 
@@ -20,6 +20,23 @@ app.use('*', getCorsMiddleware());
 app.use('*', async (c, next) => {
   // Inject database
   c.set('db', drizzle(c.env.DB, { schema }));
+  await next();
+});
+
+// Protect all mutating endpoints
+app.use('/api/products/*', async (c, next) => {
+  if (['POST', 'PUT', 'DELETE'].includes(c.req.method)) {
+    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+    return auth(c, next);
+  }
+  await next();
+});
+
+app.use('/api/portfolio/*', async (c, next) => {
+  if (['POST', 'PUT', 'DELETE'].includes(c.req.method)) {
+    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+    return auth(c, next);
+  }
   await next();
 });
 
@@ -35,6 +52,5 @@ app.get('/', (c) => {
 app.route('/api/products', productRoutes);
 app.route('/api/portfolio', portfolioRoutes);
 app.route('/api/upload-gift', uploadRoutes);
-app.route('/api/admin', adminRoutes);
 
 export default app;

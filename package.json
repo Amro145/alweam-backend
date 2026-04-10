@@ -9,6 +9,7 @@
     "db:migrate": "wrangler d1 migrations apply weamdb --local"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.6",
     "@libsql/client": "^0.17.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.12",
