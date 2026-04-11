@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { AppEnv } from '../core/types';
 import { customGiftOrders } from '../db/schema';
+import { desc } from 'drizzle-orm';
 import { generateCloudinarySignature } from '../core/cloudinary';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
@@ -40,6 +41,12 @@ router.post('/gift-order', zValidator('json', orderSchema), async (c) => {
     success: true,
     data: newOrder,
   }, 201);
+});
+
+router.get('/', async (c) => {
+  const db = c.get('db');
+  const orders = await db.select().from(customGiftOrders).orderBy(desc(customGiftOrders.createdAt)).all();
+  return c.json({ data: orders });
 });
 
 export default router;

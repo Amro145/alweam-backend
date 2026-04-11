@@ -40,6 +40,15 @@ app.use('/api/portfolio/*', async (c, next) => {
   await next();
 });
 
+// Protect only the GET / which lists orders
+app.use('/api/upload-gift', async (c, next) => {
+  if (c.req.method === 'GET' && c.req.path === '/api/upload-gift') {
+    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+    return auth(c, next);
+  }
+  await next();
+});
+
 // Error handling
 app.onError(globalErrorHandler);
 
