@@ -6,7 +6,10 @@
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply weamdb --local"
+    "db:migrate": "wrangler d1 migrations apply weamdb --local",
+    "db:seed": "tsx src/db/seed.ts",
+    "db:seed:dev": "for f in .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite; do [ \"$(basename $f)\" != \"metadata.sqlite\" ] && tsx src/db/seed.ts \"$f\"; done",
+    "db:seed:remote": "wrangler d1 execute weamdb --remote --file=seed.sql"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",
@@ -18,6 +21,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260410.1",
     "drizzle-kit": "^0.31.10",
+    "tsx": "^4.19.3",
     "wrangler": "^4.4.0"
   }
 }
