@@ -1,8 +1,10 @@
 export async function generateCloudinarySignature(
-  apiSecret: string
+  apiSecret: string,
+  folder: string = 'custom-gifts'
 ) {
   const timestamp = Math.round(new Date().getTime() / 1000).toString();
-  const signatureString = `folder=custom-gifts&timestamp=${timestamp}${apiSecret}`;
+  // Cloudinary signatures require parameters to be sorted alphabetically
+  const signatureString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
   
   const encoder = new TextEncoder();
   const data = encoder.encode(signatureString);

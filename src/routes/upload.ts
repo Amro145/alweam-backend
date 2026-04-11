@@ -9,7 +9,8 @@ import { z } from 'zod';
 const router = new Hono<AppEnv>();
 
 router.get('/signature', async (c) => {
-  const { signature, timestamp } = await generateCloudinarySignature(c.env.CLOUDINARY_API_SECRET);
+  const folder = c.req.query('folder') || 'custom-gifts';
+  const { signature, timestamp } = await generateCloudinarySignature(c.env.CLOUDINARY_API_SECRET, folder);
   return c.json({
     signature,
     timestamp,
