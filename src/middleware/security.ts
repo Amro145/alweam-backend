@@ -10,7 +10,7 @@ export const getCorsMiddleware = () => {
       return null;
     },
     allowHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
     maxAge: 600,
     credentials: true,
