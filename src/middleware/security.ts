@@ -3,8 +3,8 @@ import { cors } from 'hono/cors';
 export const getCorsMiddleware = () => {
   return cors({
     origin: (origin, c) => {
-      const allowed = c.env.FRONTEND_URL || '*';
-      if (allowed === '*' || origin === allowed) {
+      const allowed = c.env.FRONTEND_URL;
+      if (allowed && origin === allowed) {
         return origin;
       }
       return null;
