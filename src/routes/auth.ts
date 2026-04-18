@@ -8,10 +8,10 @@ import { zValidator } from '@hono/zod-validator';
 
 const router = new Hono<AppEnv>();
 
-// دالة بسيطة لتشفير كلمة المرور
-async function hashPassword(password: string) {
+// دالة بسيطة لتشفير كلمة المرور مع ملح (Salt)
+async function hashPassword(password: string, salt: string) {
   const encoder = new TextEncoder();
-  const data = encoder.encode(password);
+  const data = encoder.encode(password + salt);
   const hash = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(hash))
     .map((b) => b.toString(16).padStart(2, "0"))
@@ -34,7 +34,7 @@ router.post('/signup', zValidator('json', authSchema), async (c) => {
     return c.json({ success: false, message: 'اسم المستخدم موجود مسبقاً' }, 400);
   }
 
-  const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(password, c.env.JWT_SECRET);
   
   await db.insert(users).values({
     username,
@@ -54,7 +54,7 @@ router.post('/login', zValidator('json', authSchema), async (c) => {
     return c.json({ success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' }, 401);
   }
 
-  const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(password, c.env.JWT_SECRET);
   if (user.password !== hashedPassword) {
     return c.json({ success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' }, 401);
   }
