@@ -23,8 +23,13 @@ const authSchema = z.object({
   password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
 });
 
-// إنشاء حساب جديد
+// إنشاء حساب جديد (محمي بمفتاح التسجيل)
 router.post('/signup', zValidator('json', authSchema), async (c) => {
+  const registrationKey = c.req.header('X-Registration-Key');
+  if (registrationKey !== c.env.ADMIN_SECRET) {
+    return c.json({ success: false, message: 'غير مصرح لك بإنشاء حساب جديد' }, 403);
+  }
+
   const { username, password } = c.req.valid('json');
   const db = c.get('db');
 

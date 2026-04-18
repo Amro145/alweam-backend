@@ -3,10 +3,11 @@
 # signup
 POST {{baseUrl}}/api/auth/signup
 Content-Type: application/json
+X-Registration-Key: super_secret_admin_token_change_me
 
 {
-  "username": "admin",
-  "password": "admin2026"
+  "username": "admin2",
+  "password": "admin2027"
 }
 
 ###
