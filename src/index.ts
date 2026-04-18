@@ -9,7 +9,9 @@ import { getCorsMiddleware } from './middleware/security';
 import productRoutes from './routes/products';
 import portfolioRoutes from './routes/portfolio';
 import uploadRoutes from './routes/upload';
+import authRoutes from './routes/auth';
 import { bearerAuth } from 'hono/bearer-auth';
+import { jwt } from 'hono/jwt';
 
 const app = new Hono<AppEnv>();
 
@@ -23,10 +25,19 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-// Protect all mutating endpoints
+// Protect all mutating endpoints and admin data with JWT
+app.use('/api/admin/*', async (c, next) => {
+  const jwtMiddleware = jwt({
+    secret: c.env.JWT_SECRET,
+    alg: 'HS256',
+  });
+  return jwtMiddleware(c, next);
+});
+
+// Update previous protections to use a unified admin check or JWT
 app.use('/api/products/*', async (c, next) => {
   if (['POST', 'PUT', 'DELETE'].includes(c.req.method)) {
-    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+    const auth = jwt({ secret: c.env.JWT_SECRET, alg: 'HS256' });
     return auth(c, next);
   }
   await next();
@@ -34,16 +45,16 @@ app.use('/api/products/*', async (c, next) => {
 
 app.use('/api/portfolio/*', async (c, next) => {
   if (['POST', 'PUT', 'DELETE'].includes(c.req.method)) {
-    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+    const auth = jwt({ secret: c.env.JWT_SECRET, alg: 'HS256' });
     return auth(c, next);
   }
   await next();
 });
 
-// Protect only the GET / which lists orders
-app.use('/api/upload-gift', async (c, next) => {
-  if (c.req.method === 'GET' && c.req.path === '/api/upload-gift') {
-    const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
+app.use('/api/upload-gift/*', async (c, next) => {
+  // Protect all upload-gift routes if it's the admin listing or signature
+  if (c.req.path.endsWith('/signature') || (c.req.method === 'GET' && c.req.path === '/api/upload-gift')) {
+    const auth = jwt({ secret: c.env.JWT_SECRET, alg: 'HS256' });
     return auth(c, next);
   }
   await next();
@@ -61,5 +72,6 @@ app.get('/', (c) => {
 app.route('/api/products', productRoutes);
 app.route('/api/portfolio', portfolioRoutes);
 app.route('/api/upload-gift', uploadRoutes);
+app.route('/api/auth', authRoutes);
 
 export default app;

@@ -40,3 +40,11 @@ export const customGiftOrders = sqliteTable('custom_gift_orders', {
   whatsappLink: text('whatsapp_link').notNull(),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 });
+
+// جدول المستخدمين للوحة التحكم
+export const users = sqliteTable('users', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  username: text('username').notNull().unique(),
+  password: text('password').notNull(), // hashed password
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});

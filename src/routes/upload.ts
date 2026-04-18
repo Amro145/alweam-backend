@@ -9,10 +9,7 @@ import { bearerAuth } from 'hono/bearer-auth';
 
 const router = new Hono<AppEnv>();
 
-router.get('/signature', async (c, next) => {
-  const auth = bearerAuth({ token: c.env.ADMIN_SECRET });
-  return auth(c, next);
-}, async (c) => {
+router.get('/signature', async (c) => {
   const folder = c.req.query('folder') || 'custom-gifts';
   const { signature, timestamp } = await generateCloudinarySignature(c.env.CLOUDINARY_API_SECRET, folder);
   return c.json({

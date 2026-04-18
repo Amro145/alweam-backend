@@ -10,6 +10,7 @@ export type Bindings = {
   WHATSAPP_NUMBER: string;
   FRONTEND_URL: string;
   ADMIN_SECRET: string;
+  JWT_SECRET: string;
 };
 
 export type Variables = {

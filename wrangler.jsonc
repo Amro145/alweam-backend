@@ -18,7 +18,8 @@
 		"CLOUDINARY_API_SECRET": "l7pBUexaixXQJKBE1s-Vi7zTIB4",
 		"WHATSAPP_NUMBER": "201038469009",
 		"FRONTEND_URL": "https://alweam.amroaltayeb14.workers.dev",
-		"ADMIN_SECRET": "super_secret_admin_token_change_me"
+		"ADMIN_SECRET": "super_secret_admin_token_change_me",
+		"JWT_SECRET": "your-jwt-secret-keep-it-safe"
 	}
 	// "compatibility_flags": [
 	//   "nodejs_compat"
