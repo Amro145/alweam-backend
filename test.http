@@ -1,0 +1,40 @@
+@baseUrl = https://my-app.amroaltayeb14.workers.dev
+
+# signup
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin2026"
+}
+
+###
+
+# login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin2026"
+}
+
+###
+
+@token = {{login.response.body.token}}
+
+# test protected route (get orders)
+GET {{baseUrl}}/api/upload-gift
+Authorization: Bearer {{token}}
+
+###
+
+# test protected signature
+GET {{baseUrl}}/api/upload-gift/signature?folder=products
+Authorization: Bearer {{token}}
+
+
+
+

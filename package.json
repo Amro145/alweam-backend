@@ -7,6 +7,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply weamdb --local",
+    "db:migrate:remote": "wrangler d1 migrations apply weamdb --remote",
     "db:seed": "tsx src/db/seed.ts",
     "db:seed:dev": "for f in .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite; do [ \"$(basename $f)\" != \"metadata.sqlite\" ] && tsx src/db/seed.ts \"$f\"; done",
     "db:seed:remote": "wrangler d1 execute weamdb --remote --file=seed.sql"
